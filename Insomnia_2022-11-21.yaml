@@ -1,0 +1,503 @@
+_type: export
+__export_format: 4
+__export_date: 2022-11-21T21:58:06.561Z
+__export_source: insomnia.desktop.app:v2022.6.0
+resources:
+  - _id: req_43e6c9d1f3b84ff1abd062a8dfdfc14b
+    parentId: fld_76f0c3fde79e479b9f09e28c61218b48
+    modified: 1668988635261
+    created: 1668988576225
+    url: "{{ _.mercadorias }}mercadorias"
+    name: Mercadorias
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication: {}
+    metaSortKey: -1668988576225
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_76f0c3fde79e479b9f09e28c61218b48
+    parentId: wrk_f5fa593e5ab846f5a103203cd4d348d2
+    modified: 1668988574982
+    created: 1668988574982
+    name: Mercadoria
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1668988574982
+    _type: request_group
+  - _id: wrk_f5fa593e5ab846f5a103203cd4d348d2
+    parentId: null
+    modified: 1669067855873
+    created: 1668895090222
+    name: Atividade-3
+    description: ""
+    scope: collection
+    _type: workspace
+  - _id: req_30061956f2e14acbaecade729e6c7a1a
+    parentId: fld_52859e30788742fb91df47bf189dab47
+    modified: 1668988630864
+    created: 1668988344198
+    url: "{{ _.vendas }}vendas"
+    name: Vendas
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication: {}
+    metaSortKey: -1668988344198
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_52859e30788742fb91df47bf189dab47
+    parentId: wrk_f5fa593e5ab846f5a103203cd4d348d2
+    modified: 1668988343054
+    created: 1668988343054
+    name: vendas
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1668988343054
+    _type: request_group
+  - _id: req_d9a2981f2a424c3c896333be0301b6eb
+    parentId: fld_cacc5af3b4304776b383e13f54ed3c0e
+    modified: 1668988626885
+    created: 1668988285320
+    url: "{{ _.servico }}servicos"
+    name: Serviços
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication: {}
+    metaSortKey: -1668988285320
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_cacc5af3b4304776b383e13f54ed3c0e
+    parentId: wrk_f5fa593e5ab846f5a103203cd4d348d2
+    modified: 1668988284168
+    created: 1668988284168
+    name: serviço
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1668988284168
+    _type: request_group
+  - _id: req_df4d70e039294b2fa50d181cd944869f
+    parentId: fld_b21496b4cd7a45ffa3f83982d3cc0a5d
+    modified: 1668988619350
+    created: 1668988091732
+    url: "{{ _.empresa }}empresas"
+    name: Empresas
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication: {}
+    metaSortKey: -1668988091732
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_b21496b4cd7a45ffa3f83982d3cc0a5d
+    parentId: wrk_f5fa593e5ab846f5a103203cd4d348d2
+    modified: 1668988090657
+    created: 1668988090657
+    name: Empresa
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1668988090657
+    _type: request_group
+  - _id: req_620e23d25d6e464b81619ccfe9698861
+    parentId: fld_9fd94ba7280b4e3fb3b30ec5b9f35cc7
+    modified: 1668988623597
+    created: 1668987909647
+    url: "{{ _.veiculo }}veiculos/1"
+    name: Veiculo
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication: {}
+    metaSortKey: -1668987909647
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_9fd94ba7280b4e3fb3b30ec5b9f35cc7
+    parentId: wrk_f5fa593e5ab846f5a103203cd4d348d2
+    modified: 1668987316745
+    created: 1668987316745
+    name: Veiculos
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1668987316745
+    _type: request_group
+  - _id: req_9a85b5d54ffa4428a463c8672e1878d8
+    parentId: fld_9fd94ba7280b4e3fb3b30ec5b9f35cc7
+    modified: 1668987905790
+    created: 1668987337155
+    url: "{{ _.veiculo }}veiculos"
+    name: Veiculos
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication: {}
+    metaSortKey: -1668987337155
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_ad0c184a7a7145d38d588d4f078ea4a7
+    parentId: fld_3adf88ba8268463ba23122018688b8a4
+    modified: 1668905904494
+    created: 1668905904494
+    url: ""
+    name: New Request
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication: {}
+    metaSortKey: -1668905904494
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_3adf88ba8268463ba23122018688b8a4
+    parentId: fld_b22958d26198470399fec0aeab45aa2e
+    modified: 1668905894894
+    created: 1668905894894
+    name: Telefone
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1668905894894
+    _type: request_group
+  - _id: fld_b22958d26198470399fec0aeab45aa2e
+    parentId: wrk_f5fa593e5ab846f5a103203cd4d348d2
+    modified: 1668901800461
+    created: 1668901800461
+    name: Usuario
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1668901800461
+    _type: request_group
+  - _id: req_34d05f6493134e11a043dc69e158e252
+    parentId: fld_d67aedb5653e48629df6e5c62e14f0cd
+    modified: 1668985774497
+    created: 1668920052842
+    url: "{{ _.usuario }}docs/1/atualizar/1"
+    name: Atualizar
+    description: ""
+    method: PUT
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        		"tipo": "CPF",
+        		"dataEmissao": "2022-11-20T04:46:17.821+00:00",
+        		"numero": "4545"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication: {}
+    metaSortKey: -1668920052842
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_d67aedb5653e48629df6e5c62e14f0cd
+    parentId: fld_b22958d26198470399fec0aeab45aa2e
+    modified: 1668905885655
+    created: 1668905885655
+    name: Documento
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1668905885655
+    _type: request_group
+  - _id: req_cfd42b6902d043189b8f9a7b0bad6f56
+    parentId: fld_d67aedb5653e48629df6e5c62e14f0cd
+    modified: 1668986264942
+    created: 1668919579259
+    url: "{{ _.usuario }}docs/1"
+    name: Pegar Documento
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication: {}
+    metaSortKey: -1668919579259
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_c068d16eef57462f9a060850cb18d446
+    parentId: fld_b22958d26198470399fec0aeab45aa2e
+    modified: 1668987274938
+    created: 1668904844420
+    url: "{{ _.usuario }}cadastro"
+    name: Cadastro
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"nome": "4444",
+        	"nomeSocial": "Loja do carro, vendas de componentes automotivos",
+        	"perfis": [
+        		"FORNECEDOR"
+        	],
+        	"telefones": [],
+        	"endereco": {
+        			"estado": "Rio de Janeiro",
+        			"cidade": "Rio de Janeiro",
+        			"bairro": "Centro",
+        			"rua": "Av. República do chile",
+        			"numero": "00",
+        			"codigoPostal": "20031-170",
+        			"informacoesAdicionais": null
+        	},
+        	"documentos": [
+        		{
+        			"tipo": "CNPJ",
+        			"numero": "1231313"
+        		}
+        	],
+        	"emails": [
+        		{
+        			"endereco": "21313121@gmail.com"
+        		}
+        	],
+        	"credencial": [],
+        	"mercadorias": [
+        		{
+        			"nome": "Pastel",
+        			"quantidade": 150,
+        			"valor": "15",
+        			"descricao": "Temos pastel de tudo"
+        		}
+        	],
+        	"veiculos": [
+        		{
+        				"tipo": "SUV",
+        				"modelo": "corolla-cross",
+        				"placa": "ABC-0000"
+        			}
+        	]
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication:
+      type: basic
+      useISO88591: false
+      disabled: false
+      username: user
+      password: b17a9973-f0b5-4b09-b3ee-9389746e61c7
+    metaSortKey: -1668904844420
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_63f1199a287c44c787a7ed6d7f196ee8
+    parentId: fld_b22958d26198470399fec0aeab45aa2e
+    modified: 1668987878350
+    created: 1668918427196
+    url: "{{ _.usuario }}atualizar/1"
+    name: Atualizar
+    description: ""
+    method: PUT
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"id": 1,
+        	"nome": "22 Alcântara de Bragança e Bourbon",
+        	"nomeSocial": "Dom Pedro",
+        		"documentos": [
+        		{
+        			"id": 1,
+        			"tipo": "CNPJ",
+        			"numero": "5646545645"
+        		}
+        	],
+        	"emails": [
+        		{
+        			"id": 1,
+        			"endereco": "aaaaa@a.com"
+        		}
+        	]
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication: {}
+    metaSortKey: -1668903322440.5
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_e8437b9436b347f1a1eee4af5341f94b
+    parentId: fld_b22958d26198470399fec0aeab45aa2e
+    modified: 1668987286670
+    created: 1668904056713
+    url: "{{ _.usuario }}usuarios/6"
+    name: Pegar Usuario Id
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication: {}
+    metaSortKey: -1668901800461
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_78a2c9b4301d4369b667004c19bcdab4
+    parentId: fld_b22958d26198470399fec0aeab45aa2e
+    modified: 1668905035011
+    created: 1668901801963
+    url: "{{ _.usuario }}usuarios"
+    name: TodosUsuarios
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: basic
+      useISO88591: false
+      disabled: false
+      username: user
+      password: b17a9973-f0b5-4b09-b3ee-9389746e61c7
+    metaSortKey: -1668901800411
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: env_d6772f913d1f305f6cb1a97c65f01bbf9599c315
+    parentId: wrk_f5fa593e5ab846f5a103203cd4d348d2
+    modified: 1668988568531
+    created: 1668895090233
+    name: Base Environment
+    data:
+      usuario: http://localhost:8080/usuario/
+      veiculo: http://localhost:8080/veiculo/
+      empresa: http://localhost:8080/empresa/
+      servico: http://localhost:8080/servico/
+      vendas: http://localhost:8080/venda/
+      mercadorias: http://localhost:8080/mercadoria/
+    dataPropertyOrder:
+      "&":
+        - usuario
+        - veiculo
+        - empresa
+        - servico
+        - vendas
+        - mercadorias
+    color: null
+    isPrivate: false
+    metaSortKey: 1668895090233
+    _type: environment
+  - _id: jar_d6772f913d1f305f6cb1a97c65f01bbf9599c315
+    parentId: wrk_f5fa593e5ab846f5a103203cd4d348d2
+    modified: 1668905036133
+    created: 1668895090237
+    name: Default Jar
+    cookies:
+      - key: JSESSIONID
+        value: BAFEDBAD06EAE898AB9C837FFF050E06
+        domain: localhost
+        path: /
+        httpOnly: true
+        hostOnly: true
+        creation: 2022-11-20T00:11:13.985Z
+        lastAccessed: 2022-11-20T00:43:56.132Z
+        id: "18369224644131465"
+    _type: cookie_jar
+  - _id: spc_d696f035fc274d59af0c5f8a687ac2dc
+    parentId: wrk_f5fa593e5ab846f5a103203cd4d348d2
+    modified: 1668895090224
+    created: 1668895090224
+    fileName: Atividade-2
+    contents: ""
+    contentType: yaml
+    _type: api_spec
