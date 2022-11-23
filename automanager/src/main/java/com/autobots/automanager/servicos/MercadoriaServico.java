@@ -36,13 +36,17 @@ public class MercadoriaServico {
 		return repositorio.save(newObj);
 	}
 	
+	public void delete(Long obj) {
+		repositorio.deleteById(obj);
+	}
+	
 	private void updateData(Mercadoria newObj, Mercadoria obj) {
-		newObj.setCadastro(new Date());
-		newObj.setDescricao(obj.getDescricao());
-		newObj.setFabricao(new Date());
 		newObj.setNome(obj.getNome());
+		newObj.setDescricao(obj.getDescricao());
+		newObj.setCadastro(obj.getCadastro());
+		newObj.setFabricao(obj.getFabricao());
 		newObj.setQuantidade(obj.getQuantidade());
-		newObj.setValidade(new Date());
+		newObj.setValidade(obj.getValidade());
 		newObj.setValor(obj.getValor());
 	}
 	

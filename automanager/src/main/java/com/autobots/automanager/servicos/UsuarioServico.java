@@ -6,9 +6,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.autobots.automanager.componentes.UsuariosSelecionador;
+import com.autobots.automanager.entitades.CredencialUsuarioSenha;
 import com.autobots.automanager.entitades.Documento;
 import com.autobots.automanager.entitades.Email;
+import com.autobots.automanager.entitades.Mercadoria;
 import com.autobots.automanager.entitades.Usuario;
+import com.autobots.automanager.repositorios.RepositorioCredencialUsuarioSenha;
 import com.autobots.automanager.repositorios.RepositorioDocumento;
 import com.autobots.automanager.repositorios.RepositorioEmail;
 import com.autobots.automanager.repositorios.RepositorioUsuario;
@@ -24,6 +28,12 @@ public class UsuarioServico {
 	
 	@Autowired
 	private RepositorioDocumento repositorioDocumento;
+	
+	@Autowired
+	private RepositorioCredencialUsuarioSenha repositorioCredencialUsuarioSenha;
+	
+	@Autowired
+	private MercadoriaServico servicoMercadoria;
 	
 	public List<Usuario> pegarTodos() {
 		List<Usuario> pegarTodos = repositorio.findAll();
@@ -115,6 +125,22 @@ public class UsuarioServico {
 		newObj.setDataEmissao(new Date());
 	}
 	
+	// Usuario Senha
+	
+	public List<CredencialUsuarioSenha> credencial() {
+		return repositorioCredencialUsuarioSenha.findAll();
+	}
+	
+	// Mercadoria
+	public void deletarMercadoria(Long idCliente, Long idMercadoria) {
+		List<Usuario> todos = pegarTodos();
+		UsuariosSelecionador select = new UsuariosSelecionador();
+		Usuario selecionado = select.selecionar(todos, idCliente);
+		Mercadoria mercadoria = servicoMercadoria.pegarPeloId(idMercadoria); 
+		if(selecionado.getId() == idCliente) {
+			selecionado.getMercadorias().remove(mercadoria);
+		}
+	}
 	
 	
 }
