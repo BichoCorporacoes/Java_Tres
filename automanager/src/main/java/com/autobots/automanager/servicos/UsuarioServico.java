@@ -97,8 +97,6 @@ public class UsuarioServico {
 	
 	// Documentos
 	
-
-	
 	public List<Documento> pegarDocumentos(){
 		List<Documento> documentos = repositorioDocumento.findAll();
 		return documentos;

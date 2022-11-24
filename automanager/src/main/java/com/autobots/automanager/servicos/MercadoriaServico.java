@@ -1,12 +1,10 @@
 package com.autobots.automanager.servicos;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.autobots.automanager.dto.MercadoriaDto;
 import com.autobots.automanager.entitades.Mercadoria;
 import com.autobots.automanager.repositorios.RepositorioMercadoria;
 

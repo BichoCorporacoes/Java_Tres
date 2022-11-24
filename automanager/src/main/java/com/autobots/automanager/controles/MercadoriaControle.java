@@ -2,7 +2,6 @@ package com.autobots.automanager.controles;
 
 import com.autobots.automanager.componentes.MercadoriaSelecionador;
 import com.autobots.automanager.componentes.UsuariosSelecionador;
-import com.autobots.automanager.dto.MercadoriaDto;
 import com.autobots.automanager.entitades.Mercadoria;
 import com.autobots.automanager.entitades.Usuario;
 import com.autobots.automanager.servicos.MercadoriaServico;
@@ -103,15 +102,21 @@ public class MercadoriaControle {
       );
     }
   }
-  
+
   @DeleteMapping("/deletar/{idCliente}/{idMercadoria}")
   public ResponseEntity<?> deletarMercadoria(
-	@PathVariable Long idCliente,
-    @PathVariable Long idMercadoria){
-	  Usuario usuarioSelecionado = servicoUsuario.pegarPeloId(idCliente);
-	  servico.delete(idMercadoria);
-	  servicoUsuario.salvarUsuario(usuarioSelecionado);
-	  return null;
+    @PathVariable Long idCliente,
+    @PathVariable Long idMercadoria
+  ) {
+	List<Usuario> usuarios = servicoUsuario.pegarTodos();
+	Usuario selecionado = usuarioSelecionador.selecionar(usuarios, idMercadoria);
+	if(selecionado == null) {
+		return null;
+	}else {
+		servicoUsuario.deletarMercadoria(idCliente, idMercadoria);
+		servico.delete(idMercadoria);
+	    return null;
+	}
   }
 
   @PutMapping("/atualizar/{idCliente}/{idMercadoria}")
@@ -136,16 +141,13 @@ public class MercadoriaControle {
         HttpStatus.NOT_FOUND
       );
     } else {
-      for(Mercadoria listagemMercadoria : getAllMercadorias) {
-    	  if(listagemMercadoria.getId() == idMercadoria.longValue() ) {
-    		  atualizador.setId(idMercadoria);
-    		  servico.update(atualizador);
-    	  }
+      for (Mercadoria listagemMercadoria : getAllMercadorias) {
+        if (listagemMercadoria.getId() == idMercadoria.longValue()) {
+          atualizador.setId(idMercadoria);
+          servico.update(atualizador);
+        }
       }
-      return new ResponseEntity<>(
-    	        "Atualizado com sucesso",
-    	        HttpStatus.OK
-    	      );
+      return new ResponseEntity<>("Atualizado com sucesso", HttpStatus.OK);
     }
   }
 }

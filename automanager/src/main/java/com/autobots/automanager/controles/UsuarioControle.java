@@ -4,7 +4,6 @@ import com.autobots.automanager.componentes.UsuariosSelecionador;
 import com.autobots.automanager.entitades.CredencialUsuarioSenha;
 import com.autobots.automanager.entitades.Documento;
 import com.autobots.automanager.entitades.Email;
-import com.autobots.automanager.entitades.Mercadoria;
 import com.autobots.automanager.entitades.Telefone;
 import com.autobots.automanager.entitades.Usuario;
 import com.autobots.automanager.servicos.UsuarioServico;
