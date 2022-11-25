@@ -13,12 +13,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.autobots.automanager.componentes.EmpresaSelecionadora;
+import com.autobots.automanager.componentes.MercadoriaSelecionador;
+import com.autobots.automanager.componentes.ServicoSelecionador;
 import com.autobots.automanager.componentes.VendaSelecionador;
+import com.autobots.automanager.entitades.Empresa;
 import com.autobots.automanager.entitades.Mercadoria;
 import com.autobots.automanager.entitades.Servico;
 import com.autobots.automanager.entitades.Usuario;
 import com.autobots.automanager.entitades.Veiculo;
 import com.autobots.automanager.entitades.Venda;
+import com.autobots.automanager.servicos.EmpresaServico;
 import com.autobots.automanager.servicos.MercadoriaServico;
 import com.autobots.automanager.servicos.ServicoServico;
 import com.autobots.automanager.servicos.UsuarioServico;
@@ -46,6 +51,18 @@ public class VendaControle {
 	
 	@Autowired
 	private ServicoServico servicoServico;
+	
+	@Autowired
+	private MercadoriaSelecionador selecionadorMercadoria;
+	
+	@Autowired
+	private ServicoSelecionador selecionadorServico;
+	
+	@Autowired
+	private EmpresaServico servicoEmpresa;
+	
+	@Autowired
+	private EmpresaSelecionadora selecionadorEmpresa;
 	
 	@GetMapping("/vendas")
 	public ResponseEntity<List<Venda>> pegarTodos(){
@@ -84,25 +101,43 @@ public class VendaControle {
 		return new ResponseEntity<>(status);
 	}
 	
-	@PostMapping("/cadastro")
-	public void cadastroVenda(@RequestBody Venda vendas){
+	@PostMapping("/cadastro/{idEmpresa}")
+	public void cadastroVenda(@RequestBody Venda vendas, @PathVariable Long idEmpresa){
 		/*
 		 * Cliente / Funcionario , Mercadoria , Servicos , Veiculo
 		 * */
 		Usuario clienteSelecionado = servicoUsuario.pegarPeloId(vendas.getCliente().getId());
 		Usuario funcionarioSelecionado = servicoUsuario.pegarPeloId(vendas.getFuncionario().getId());
 		Veiculo veiculoSelecionador = servicoVeiculo.pegarPeloId(vendas.getVeiculo().getId());
+		List<Empresa> selecionarEmpresa = servicoEmpresa.pegarTodas();
+		Empresa selecionada = selecionadorEmpresa.selecionar(selecionarEmpresa, idEmpresa);
 		for(Mercadoria bodyMercadoria: vendas.getMercadorias()) {
-			Mercadoria findMercadoria = servicoMercadoria.pegarPeloId(bodyMercadoria.getId());
-			vendas.getMercadorias().add(findMercadoria);
+			Mercadoria novaMercadoria = new Mercadoria();
+			novaMercadoria.setDescricao(bodyMercadoria.getDescricao());
+			novaMercadoria.setCadastro(bodyMercadoria.getCadastro());
+			novaMercadoria.setFabricao(bodyMercadoria.getFabricao());
+			novaMercadoria.setNome(bodyMercadoria.getNome());
+			novaMercadoria.setQuantidade(bodyMercadoria.getQuantidade());
+			novaMercadoria.setValidade(bodyMercadoria.getValidade());
+			novaMercadoria.setValor(bodyMercadoria.getValor());
+			vendas.getMercadorias().add(novaMercadoria);
 		}
+		
 		for(Servico bodyServico : vendas.getServicos() ) {
-			Servico findServico = servicoServico.pegarPeloId(bodyServico.getId());
-			vendas.getServicos().add(findServico);
+			Servico novoServico = new Servico();
+			novoServico.setDescricao(bodyServico.getDescricao());
+			novoServico.setNome(bodyServico.getNome());
+			novoServico.setValor(bodyServico.getValor());
+			vendas.getServicos().add(novoServico);
 		}
+				
 		vendas.setCliente(clienteSelecionado);
 		vendas.setFuncionario(funcionarioSelecionado);
 		vendas.setVeiculo(veiculoSelecionador);
-		servico.salvar(vendas);
+
+		if(selecionada != null) {
+			selecionada.getVendas().add(vendas);
+			servicoEmpresa.Salvar(selecionada);
+		}
 	}
 }

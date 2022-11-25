@@ -19,6 +19,10 @@ public class EmpresaServico {
 		return pegarTodas;
 	}
 	
+	public void Salvar(Empresa salvar) {
+		repositorio.save(salvar);
+	}
+	
 	public Empresa pegarPeloId(Long id) {
 		Empresa achar = repositorio.getById(id);
 		return achar;
