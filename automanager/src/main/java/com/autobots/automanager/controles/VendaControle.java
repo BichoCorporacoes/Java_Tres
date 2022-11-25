@@ -102,42 +102,41 @@ public class VendaControle {
 	}
 	
 	@PostMapping("/cadastro/{idEmpresa}")
-	public void cadastroVenda(@RequestBody Venda vendas, @PathVariable Long idEmpresa){
-		/*
-		 * Cliente / Funcionario , Mercadoria , Servicos , Veiculo
-		 * */
-		Usuario clienteSelecionado = servicoUsuario.pegarPeloId(vendas.getCliente().getId());
-		Usuario funcionarioSelecionado = servicoUsuario.pegarPeloId(vendas.getFuncionario().getId());
-		Veiculo veiculoSelecionador = servicoVeiculo.pegarPeloId(vendas.getVeiculo().getId());
+	public ResponseEntity<?> cadastroVenda(@RequestBody Venda vendas, @PathVariable Long idEmpresa){
 		List<Empresa> selecionarEmpresa = servicoEmpresa.pegarTodas();
 		Empresa selecionada = selecionadorEmpresa.selecionar(selecionarEmpresa, idEmpresa);
-		for(Mercadoria bodyMercadoria: vendas.getMercadorias()) {
-			Mercadoria novaMercadoria = new Mercadoria();
-			novaMercadoria.setDescricao(bodyMercadoria.getDescricao());
-			novaMercadoria.setCadastro(bodyMercadoria.getCadastro());
-			novaMercadoria.setFabricao(bodyMercadoria.getFabricao());
-			novaMercadoria.setNome(bodyMercadoria.getNome());
-			novaMercadoria.setQuantidade(bodyMercadoria.getQuantidade());
-			novaMercadoria.setValidade(bodyMercadoria.getValidade());
-			novaMercadoria.setValor(bodyMercadoria.getValor());
-			vendas.getMercadorias().add(novaMercadoria);
-		}
-		
-		for(Servico bodyServico : vendas.getServicos() ) {
-			Servico novoServico = new Servico();
-			novoServico.setDescricao(bodyServico.getDescricao());
-			novoServico.setNome(bodyServico.getNome());
-			novoServico.setValor(bodyServico.getValor());
-			vendas.getServicos().add(novoServico);
-		}
-				
-		vendas.setCliente(clienteSelecionado);
-		vendas.setFuncionario(funcionarioSelecionado);
-		vendas.setVeiculo(veiculoSelecionador);
-
 		if(selecionada != null) {
+			Usuario clienteSelecionado = servicoUsuario.pegarPeloId(vendas.getCliente().getId());
+			Usuario funcionarioSelecionado = servicoUsuario.pegarPeloId(vendas.getFuncionario().getId());
+			Veiculo veiculoSelecionador = servicoVeiculo.pegarPeloId(vendas.getVeiculo().getId());
+			for(Mercadoria bodyMercadoria: vendas.getMercadorias()) {
+				Mercadoria novaMercadoria = new Mercadoria();
+				novaMercadoria.setDescricao(bodyMercadoria.getDescricao());
+				novaMercadoria.setCadastro(bodyMercadoria.getCadastro());
+				novaMercadoria.setFabricao(bodyMercadoria.getFabricao());
+				novaMercadoria.setNome(bodyMercadoria.getNome());
+				novaMercadoria.setQuantidade(bodyMercadoria.getQuantidade());
+				novaMercadoria.setValidade(bodyMercadoria.getValidade());
+				novaMercadoria.setValor(bodyMercadoria.getValor());
+				vendas.getMercadorias().add(novaMercadoria);
+			}
+			for(Servico bodyServico : vendas.getServicos() ) {
+				Servico novoServico = new Servico();
+				novoServico.setDescricao(bodyServico.getDescricao());
+				novoServico.setNome(bodyServico.getNome());
+				novoServico.setValor(bodyServico.getValor());
+				vendas.getServicos().add(novoServico);
+			}	
+			vendas.setCliente(clienteSelecionado);
+			vendas.setFuncionario(funcionarioSelecionado);
+			vendas.setVeiculo(veiculoSelecionador);
 			selecionada.getVendas().add(vendas);
 			servicoEmpresa.Salvar(selecionada);
+			return new ResponseEntity<>("Serviço cadastrado na empresa: " + selecionada.getNomeFantasia(),HttpStatus.CREATED);
+		}else {
+			return new ResponseEntity<>("Empresa não encontrada", HttpStatus.NOT_FOUND);
 		}
+		
+
 	}
 }
