@@ -38,6 +38,7 @@ public class MercadoriaControle {
 
   @Autowired
   private VendaServico servicoVenda;
+  
 
   @Autowired
   private MercadoriaSelecionador selecionadora;
@@ -109,6 +110,13 @@ public class MercadoriaControle {
         HttpStatus.NOT_FOUND
       );
     } else {
+    	for(Empresa empresas : servicoEmpresa.pegarTodas()) {
+    		for(Usuario usuarios : empresas.getUsuarios()) {
+    			if(usuarios.getId().equals(select.getId())) {
+    				empresas.getMercadorias().add(cadastro);
+    			}
+    		}
+    	}
       select.getMercadorias().add(cadastro);
       servicoUsuario.salvarUsuario(select);
       return new ResponseEntity<>(

@@ -1,6 +1,7 @@
 package com.autobots.automanager.controles;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -75,8 +76,10 @@ public class VeiculoControle {
 			select.getVeiculos().add(body);
 			body.setProprietario(select);
 			veiculoServico.adicionar(body);
+			return new ResponseEntity<>("Veiculo cadastrado no usuario: " + select.getNome(), HttpStatus.ACCEPTED);
+		}else {
+			return new ResponseEntity<>("Usuario não encontrado", HttpStatus.NOT_FOUND);
 		}
-		return null;
 	}
 	
 	@PutMapping("/atualizar/{id}")
@@ -88,30 +91,43 @@ public class VeiculoControle {
 			atualizador.setId(id);
 			veiculoServico.update(atualizador);
 			status = HttpStatus.OK;
+			return new ResponseEntity<>("Atualizado",status);
+		}else {
+			status = HttpStatus.NOT_FOUND;
+			return new ResponseEntity<>("Não encontrado",status);			
 		}
-		return new ResponseEntity<>(status);
 	}
+	
 	
 	@DeleteMapping("/deletar/{id}")
 	public ResponseEntity<?> deletarVeiculo(@PathVariable Long id){
-		
-		veiculoServico.deletar(id);
-		List<Usuario> usuarios = servicoUsuario.pegarTodos();
-		List<Venda> vendas = servicoVenda.pegarTodos();
-	    for (Usuario mercadoriaEmpresa : usuarios) {
-	        for (Veiculo empresaMercadoria : mercadoriaEmpresa.getVeiculos()) {
-	          if (empresaMercadoria.getId() == id) {
-	            servicoUsuario.deletarVeiculos(mercadoriaEmpresa.getId(), id);
-	          }
-	        }
-	      }
-	    for (Venda mercadoriaEmpresa : vendas) {
-	    		if (mercadoriaEmpresa.getId() == id) {
-	    			mercadoriaEmpresa.setVeiculo(null);
-	    		}
-	    }
-	    veiculoServico.deletar(id);
-		return null;
+		List<Veiculo> veiculos = veiculoServico.pegarTodos();
+		Veiculo veiculo = selecionador.selecionar(veiculos, id);
+		if(veiculo != null) {
+			veiculo.setProprietario(null);
+			List<Usuario> usuarios = servicoUsuario.pegarTodos();
+			List<Venda> vendas = servicoVenda.pegarTodos();
+			for(Usuario userVeiculos : usuarios) {
+				Set<Veiculo> pertencemAoUser = userVeiculos.getVeiculos();
+				for(Veiculo veiculosUsuario : pertencemAoUser) {
+					if(veiculosUsuario.getId() == id) {
+						userVeiculos.getVeiculos().clear();
+						pertencemAoUser.remove(veiculo);
+						userVeiculos.getVeiculos().addAll(pertencemAoUser);
+					}
+				}
+			}
+			for(Venda vendasVeiculo : vendas) {
+				if(vendasVeiculo.getVeiculo().getId().equals(veiculo.getId())) {
+					veiculoServico.deletarVendas(vendasVeiculo.getId(), id);
+					vendasVeiculo.setVeiculo(null);
+				}
+			}
+			veiculoServico.deletar(id);
+			return new ResponseEntity<>("Deletado",HttpStatus.ACCEPTED);
+		}else {
+			return new ResponseEntity<>("Não encontrado",HttpStatus.NOT_FOUND);			
+		}
 	}
 
 }

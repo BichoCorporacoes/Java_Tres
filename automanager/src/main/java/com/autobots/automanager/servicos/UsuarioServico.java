@@ -11,12 +11,14 @@ import com.autobots.automanager.entitades.CredencialUsuarioSenha;
 import com.autobots.automanager.entitades.Documento;
 import com.autobots.automanager.entitades.Email;
 import com.autobots.automanager.entitades.Mercadoria;
+import com.autobots.automanager.entitades.Telefone;
 import com.autobots.automanager.entitades.Usuario;
 import com.autobots.automanager.entitades.Veiculo;
 import com.autobots.automanager.entitades.Venda;
 import com.autobots.automanager.repositorios.RepositorioCredencialUsuarioSenha;
 import com.autobots.automanager.repositorios.RepositorioDocumento;
 import com.autobots.automanager.repositorios.RepositorioEmail;
+import com.autobots.automanager.repositorios.RepositorioTelefone;
 import com.autobots.automanager.repositorios.RepositorioUsuario;
 
 @Service
@@ -33,6 +35,9 @@ public class UsuarioServico {
 	
 	@Autowired
 	private RepositorioCredencialUsuarioSenha repositorioCredencialUsuarioSenha;
+	
+	@Autowired
+	private RepositorioTelefone repositorioTelefone;
 	
 	@Autowired
 	private MercadoriaServico servicoMercadoria;
@@ -68,12 +73,27 @@ public class UsuarioServico {
 			emails.setId(emails.getId());
 			updateDocumento(emails);
 		}
+		for(Telefone telefons : obj.getTelefones()) {
+			telefons.setId(telefons.getId());
+			updateTelefone(telefons);
+		}
 		return repositorio.save(newObj);
 	}
 	
 	private void updateData(Usuario newObj, Usuario obj) {
 		newObj.setNome(obj.getNome());
 		newObj.setNomeSocial(obj.getNomeSocial());
+		newObj.getEndereco().setBairro(obj.getEndereco().getBairro());
+		newObj.getEndereco().setNumero(obj.getEndereco().getNumero());
+		newObj.getEndereco().setRua(obj.getEndereco().getRua());
+		newObj.getEndereco().setCidade(obj.getEndereco().getCidade());
+		newObj.getEndereco().setCodigoPostal(obj.getEndereco().getCodigoPostal());
+		newObj.getEndereco().setInformacoesAdicionais(obj.getEndereco().getInformacoesAdicionais());
+		newObj.getEndereco().setEstado(obj.getEndereco().getEstado());
+	}
+	
+	public void deletar(Long obj) {
+		repositorio.deleteById(obj);
 	}
 	
 	// Emails
@@ -101,6 +121,23 @@ public class UsuarioServico {
 	
 	private void updateDataEmail(Email newObj, Email obj) {
 		newObj.setEndereco(obj.getEndereco());
+	}
+	
+	// Telefone
+	
+	public Telefone pegarTelfoneById(Long id) {
+		Telefone achar = repositorioTelefone.getById(id);
+		return achar;
+	}
+	
+	public Telefone updateTelefone(Telefone obj) {
+		Telefone newObj = pegarTelfoneById(obj.getId());
+		updateTelefone(newObj, obj);
+		return repositorioTelefone.save(newObj);
+	}
+	private void updateTelefone(Telefone newObj, Telefone obj) {
+		newObj.setDdd(obj.getDdd());
+		newObj.setNumero(obj.getNumero());
 	}
 	
 	// Documentos

@@ -163,6 +163,7 @@ public class VendaControle {
     for (Veiculo mercadoriaEmpresa : veiculos) {
       for (Venda empresaMercadoria : mercadoriaEmpresa.getVendas()) {
         if (empresaMercadoria.getId() == id) {
+        	empresaMercadoria.setVeiculo(null);
           servicoVeiculo.deletarVendas(mercadoriaEmpresa.getId(), id);
         }
       }

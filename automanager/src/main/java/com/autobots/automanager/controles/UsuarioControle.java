@@ -1,11 +1,14 @@
 package com.autobots.automanager.controles;
 
+import com.autobots.automanager.componentes.EmpresaSelecionadora;
 import com.autobots.automanager.componentes.UsuariosSelecionador;
 import com.autobots.automanager.entitades.CredencialUsuarioSenha;
 import com.autobots.automanager.entitades.Documento;
 import com.autobots.automanager.entitades.Email;
+import com.autobots.automanager.entitades.Empresa;
 import com.autobots.automanager.entitades.Telefone;
 import com.autobots.automanager.entitades.Usuario;
+import com.autobots.automanager.servicos.EmpresaServico;
 import com.autobots.automanager.servicos.UsuarioServico;
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,6 +32,9 @@ public class UsuarioControle {
 
   @Autowired
   private UsuarioServico usuarioServico;
+
+  @Autowired
+  private EmpresaServico servicoEmpresa;
 
   @Autowired
   private UsuariosSelecionador selecionador;
@@ -118,81 +124,96 @@ public class UsuarioControle {
     }
   }
 
-  @PostMapping("/cadastro")
-  public ResponseEntity<?> cadastrarUsuario(@RequestBody Usuario cadastro) {
+  @PostMapping("/cadastro/{idEmpresa}")
+  public ResponseEntity<?> cadastrarUsuario(
+    @PathVariable Long idEmpresa,
+    @RequestBody Usuario cadastro
+  ) {
     List<Email> pegarEmails = usuarioServico.pegarEmails();
     List<Documento> pegarDocumentos = usuarioServico.pegarDocumentos();
-    if (cadastro.getEmails().isEmpty()) {
-      return new ResponseEntity<>(
-        "Por Favor, coloque seu E-mail",
-        HttpStatus.NOT_ACCEPTABLE
-      );
-    } else {
-      if (cadastro.getDocumentos().isEmpty()) {
+    List<Empresa> empresas = servicoEmpresa.pegarTodas();
+    EmpresaSelecionadora selecionadora = new EmpresaSelecionadora();
+    Empresa main = selecionadora.selecionar(empresas, idEmpresa);
+    if (main != null) {
+      if (cadastro.getEmails().isEmpty()) {
         return new ResponseEntity<>(
-          "Por favor, Coloque um Documento",
+          "Por Favor, coloque seu E-mail",
           HttpStatus.NOT_ACCEPTABLE
         );
       } else {
-        boolean docsErrorBoolean = false;
-        Set<String> docsNumeroSet = new HashSet<>();
-        String docError = " ";
-        for (Documento docs : cadastro.getDocumentos()) {
-          for (Documento todosDocs : pegarDocumentos) {
-            if (todosDocs.getNumero().contains(docs.getNumero())) {
-              docsErrorBoolean = true;
-              docsNumeroSet.add(docs.getNumero());
-            }
-          }
-        }
-        if (docsErrorBoolean == true) {
-          docError += docsNumeroSet + " Esse documento já está cadastrado";
-          return new ResponseEntity<>(docError, HttpStatus.CONFLICT);
+        if (cadastro.getDocumentos().isEmpty()) {
+          return new ResponseEntity<>(
+            "Por favor, Coloque um Documento",
+            HttpStatus.NOT_ACCEPTABLE
+          );
         } else {
-          String erroLog = " ";
-          List<String> listaDeEmails = new ArrayList<>();
-          boolean EmailExistente = false;
-          for (Email existentes : cadastro.getEmails()) {
-            for (Email todosEmail : pegarEmails) {
-              if (todosEmail.getEndereco().equals(existentes.getEndereco())) {
-                EmailExistente = true;
-                listaDeEmails.add(existentes.getEndereco());
+          boolean docsErrorBoolean = false;
+          Set<String> docsNumeroSet = new HashSet<>();
+          String docError = " ";
+          for (Documento docs : cadastro.getDocumentos()) {
+            for (Documento todosDocs : pegarDocumentos) {
+              if (todosDocs.getNumero().contains(docs.getNumero())) {
+                docsErrorBoolean = true;
+                docsNumeroSet.add(docs.getNumero());
               }
             }
           }
-          if (EmailExistente == true) {
-            erroLog += listaDeEmails + "Já existe";
-            return new ResponseEntity<>(erroLog, HttpStatus.CONFLICT);
+          if (docsErrorBoolean == true) {
+            docError += docsNumeroSet + " Esse documento já está cadastrado";
+            return new ResponseEntity<>(docError, HttpStatus.CONFLICT);
           } else {
-            for (Documento docs : cadastro.getDocumentos()) {
-              docs.setDataEmissao(new Date());
+            String erroLog = " ";
+            List<String> listaDeEmails = new ArrayList<>();
+            boolean EmailExistente = false;
+            for (Email existentes : cadastro.getEmails()) {
+              for (Email todosEmail : pegarEmails) {
+                if (todosEmail.getEndereco().equals(existentes.getEndereco())) {
+                  EmailExistente = true;
+                  listaDeEmails.add(existentes.getEndereco());
+                }
+              }
             }
-            for (Telefone telefones : cadastro.getTelefones()) {
-              cadastro.getTelefones().add(telefones);
-            }
-            if (cadastro.getPerfis().toString().contains("FORNECEDOR")) {
-              if (cadastro.getMercadorias().isEmpty()) {
-                return new ResponseEntity<>(
-                  "Fornecedor encontrado sem mercadoria, por favor insira um",
-                  HttpStatus.NOT_ACCEPTABLE
-                );
+            if (EmailExistente == true) {
+              erroLog += listaDeEmails + "Já existe";
+              return new ResponseEntity<>(erroLog, HttpStatus.CONFLICT);
+            } else {
+              for (Documento docs : cadastro.getDocumentos()) {
+                docs.setDataEmissao(new Date());
+              }
+              for (Telefone telefones : cadastro.getTelefones()) {
+                cadastro.getTelefones().add(telefones);
+              }
+              if (cadastro.getPerfis().toString().contains("FORNECEDOR")) {
+                if (cadastro.getMercadorias().isEmpty()) {
+                  return new ResponseEntity<>(
+                    "Fornecedor encontrado sem mercadoria, por favor insira um",
+                    HttpStatus.NOT_ACCEPTABLE
+                  );
+                } else {
+                  usuarioServico.salvarUsuario(cadastro);
+                  main.getUsuarios().add(cadastro);
+                  main.getMercadorias().addAll(cadastro.getMercadorias());
+                  servicoEmpresa.Salvar(main);
+                  return new ResponseEntity<>(
+                    "Cadastro Efetuado",
+                    HttpStatus.CREATED
+                  );
+                }
               } else {
                 usuarioServico.salvarUsuario(cadastro);
+                main.getUsuarios().add(cadastro);
+                servicoEmpresa.Salvar(main);
                 return new ResponseEntity<>(
                   "Cadastro Efetuado",
                   HttpStatus.CREATED
                 );
               }
-            } else {
-              usuarioServico.salvarUsuario(cadastro);
-              return new ResponseEntity<>(
-                "Cadastro Efetuado",
-                HttpStatus.CREATED
-              );
             }
           }
         }
       }
+    }else {
+    	return new ResponseEntity<>("Empresa não encontrada", HttpStatus.NOT_FOUND);
     }
   }
 }
