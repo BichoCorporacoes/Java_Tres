@@ -7,14 +7,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.autobots.automanager.componentes.ServicoSelecionador;
+import com.autobots.automanager.componentes.UsuariosSelecionador;
 import com.autobots.automanager.entitades.Servico;
+import com.autobots.automanager.entitades.Usuario;
 import com.autobots.automanager.servicos.ServicoServico;
+import com.autobots.automanager.servicos.UsuarioServico;
 
 @RestController
 @RequestMapping("/servico")
@@ -25,6 +29,10 @@ public class ServicoControle {
 	
 	@Autowired
 	private ServicoSelecionador selecionador;
+	@Autowired
+	private UsuariosSelecionador usuarioSelecionador;
+	@Autowired
+	private UsuarioServico servicoUsuario;
 	
 	@GetMapping("/servicos")
 	public ResponseEntity<List<Servico>> pegarTodos(){
@@ -51,6 +59,17 @@ public class ServicoControle {
 		}
 	}
 	
+	@PostMapping("/cadastro/{idCliente}")
+	public ResponseEntity<?> cadastroServico(@PathVariable Long id){
+		List<Usuario> todos = servicoUsuario.pegarTodos();
+		Usuario select = usuarioSelecionador.selecionar(todos, id);
+		if(select != null) {
+
+		}
+		return null;
+	}
+	
+	
 	@PutMapping("/atualizar/{id}")
 	public ResponseEntity<?> atualizarUsuario(@PathVariable Long id, @RequestBody Servico atualizador){
 		HttpStatus status = HttpStatus.BAD_REQUEST;
@@ -58,6 +77,7 @@ public class ServicoControle {
 		atualizador.setId(id);
 		Servico usuario = selecionador.selecionar(usuarios, id);
 		if (usuario != null) {
+		    servico.update(atualizador);
 			status = HttpStatus.OK;
 		}
 		return new ResponseEntity<>(status);

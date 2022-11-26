@@ -2,10 +2,14 @@ package com.autobots.automanager.controles;
 
 import com.autobots.automanager.componentes.MercadoriaSelecionador;
 import com.autobots.automanager.componentes.UsuariosSelecionador;
+import com.autobots.automanager.entitades.Empresa;
 import com.autobots.automanager.entitades.Mercadoria;
 import com.autobots.automanager.entitades.Usuario;
+import com.autobots.automanager.entitades.Venda;
+import com.autobots.automanager.servicos.EmpresaServico;
 import com.autobots.automanager.servicos.MercadoriaServico;
 import com.autobots.automanager.servicos.UsuarioServico;
+import com.autobots.automanager.servicos.VendaServico;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,7 +31,16 @@ public class MercadoriaControle {
   private MercadoriaServico servico;
 
   @Autowired
+  private EmpresaServico servicoEmpresa;
+
+  @Autowired
   private UsuarioServico servicoUsuario;
+
+  @Autowired
+  private VendaServico servicoVenda;
+
+  @Autowired
+  private MercadoriaSelecionador selecionadora;
 
   @Autowired
   private UsuariosSelecionador usuarioSelecionador;
@@ -75,6 +88,8 @@ public class MercadoriaControle {
     atualizador.setId(id);
     Mercadoria usuario = selecionador.selecionar(usuarios, id);
     if (usuario != null) {
+      atualizador.setId(id);
+      servico.update(atualizador);
       status = HttpStatus.OK;
     }
     return new ResponseEntity<>(status);
@@ -103,51 +118,54 @@ public class MercadoriaControle {
     }
   }
 
-  @DeleteMapping("/deletar/{idCliente}/{idMercadoria}")
-  public ResponseEntity<?> deletarMercadoria(
-    @PathVariable Long idCliente,
-    @PathVariable Long idMercadoria
-  ) {
-	List<Usuario> usuarios = servicoUsuario.pegarTodos();
-	Usuario selecionado = usuarioSelecionador.selecionar(usuarios, idMercadoria);
-	if(selecionado == null) {
-		return null;
-	}else {
-		servicoUsuario.deletarMercadoria(idCliente, idMercadoria);
-		servico.delete(idMercadoria);
-	    return null;
-	}
-  }
-
-  @PutMapping("/atualizar/{idCliente}/{idMercadoria}")
-  public ResponseEntity<?> atualizarMercadoria(
-    @PathVariable Long idCliente,
-    @PathVariable Long idMercadoria,
-    @RequestBody Mercadoria atualizador
-  ) {
-    List<Usuario> getAllClientes = servicoUsuario.pegarTodos();
-    List<Mercadoria> getAllMercadorias = servico.pegarTodos();
-    Mercadoria selectMercadoria = selecionador.selecionar(
-      getAllMercadorias,
+  @DeleteMapping("/deletar/{idMercadoria}")
+  public ResponseEntity<?> deletarMercadoria(@PathVariable Long idMercadoria) {
+    List<Mercadoria> mercadorias = servico.pegarTodos();
+    List<Usuario> usuarios = servicoUsuario.pegarTodos();
+    List<Empresa> empresas = servicoEmpresa.pegarTodas();
+    List<Venda> vendas = servicoVenda.pegarTodos();
+    Mercadoria selecionado = selecionadora.selecionar(
+      mercadorias,
       idMercadoria
     );
-    Usuario selectUsuario = usuarioSelecionador.selecionar(
-      getAllClientes,
-      idCliente
-    );
-    if (selectMercadoria == null || selectUsuario == null) {
+    if (selecionado == null) {
       return new ResponseEntity<>(
-        "Usuario ou mercadoria não encontrado",
+        "Não existe essa mercadoria, digite outro ID",
         HttpStatus.NOT_FOUND
       );
     } else {
-      for (Mercadoria listagemMercadoria : getAllMercadorias) {
-        if (listagemMercadoria.getId() == idMercadoria.longValue()) {
-          atualizador.setId(idMercadoria);
-          servico.update(atualizador);
+      for (Usuario mercadoriaUsuario : usuarios) {
+        for (Mercadoria userMercadoria : mercadoriaUsuario.getMercadorias()) {
+          if (userMercadoria.getId() == idMercadoria) {
+            servicoUsuario.deletarMercadoria(
+              mercadoriaUsuario.getId(),
+              idMercadoria
+            );
+          }
         }
       }
-      return new ResponseEntity<>("Atualizado com sucesso", HttpStatus.OK);
+      for (Empresa mercadoriaEmpresa : empresas) {
+        for (Mercadoria empresaMercadoria : mercadoriaEmpresa.getMercadorias()) {
+          if (empresaMercadoria.getId() == idMercadoria) {
+            servicoEmpresa.deletarMercadoria(
+              mercadoriaEmpresa.getId(),
+              idMercadoria
+            );
+          }
+        }
+      }
+      for (Venda mercadoriaVenda : vendas) {
+        for (Mercadoria vendaMercadoria : mercadoriaVenda.getMercadorias()) {
+          if (vendaMercadoria.getId() == idMercadoria) {
+            servicoVenda.deletarMercadoria(
+              mercadoriaVenda.getId(),
+              idMercadoria
+            );
+          }
+        }
+      }
+      servico.delete(idMercadoria);
+      return new ResponseEntity<>("Deletado com sucesso", HttpStatus.OK);
     }
   }
 }

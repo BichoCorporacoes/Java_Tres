@@ -1,8 +1,9 @@
 package com.autobots.automanager.servicos;
 
+import com.autobots.automanager.componentes.VendaSelecionador;
+import com.autobots.automanager.entitades.Mercadoria;
 import com.autobots.automanager.entitades.Venda;
 import com.autobots.automanager.repositorios.RepositorioVenda;
-import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,13 @@ public class VendaServico {
 
   @Autowired
   private RepositorioVenda repositorio;
-
+  
+  @Autowired
+  private VendaSelecionador select;
+  
+  @Autowired
+  private MercadoriaServico servicoMercadoria;
+  
   public List<Venda> pegarTodos() {
     List<Venda> pegarTodas = repositorio.findAll();
     return pegarTodas;
@@ -34,10 +41,28 @@ public class VendaServico {
   }
 
   private void updateData(Venda newObj, Venda obj) {
-    newObj.setCadastro(new Date());
-    newObj.setFuncionario(obj.getFuncionario());
     newObj.setIdentificacao(obj.getIdentificacao());
-    newObj.setVeiculo(obj.getVeiculo());
-    newObj.setCliente(obj.getCliente());
   }
+  
+  public void deletar(Long obj) {
+	  repositorio.deleteById(obj);
+  }
+  
+  
+	public void deletarMercadoria(Long idEmpresa, Long idMercadoria) {
+		List<Venda> todos = pegarTodos();
+		Venda selecionado = select.selecionar(todos, idMercadoria);
+		Mercadoria mercadoria = servicoMercadoria.pegarPeloId(idMercadoria); 
+		if(selecionado.getId() == idEmpresa) {
+			selecionado.getMercadorias().remove(mercadoria);
+		}
+	}
+//	public void deletarVeiculo(Long idEmpresa, Long idMercadoria) {
+//		List<Venda> todos = pegarTodos();
+//		Venda selecionado = select.selecionar(todos, idMercadoria);
+//		Veiculo mercadoria = servicoVeiculo.pegarPeloId(idMercadoria); 
+//		if(selecionado.getId() == idEmpresa) {
+//			selecionado.getVeiculo().;
+//		}
+//	}
 }

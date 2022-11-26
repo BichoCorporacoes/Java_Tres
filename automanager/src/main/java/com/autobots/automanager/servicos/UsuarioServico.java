@@ -12,6 +12,8 @@ import com.autobots.automanager.entitades.Documento;
 import com.autobots.automanager.entitades.Email;
 import com.autobots.automanager.entitades.Mercadoria;
 import com.autobots.automanager.entitades.Usuario;
+import com.autobots.automanager.entitades.Veiculo;
+import com.autobots.automanager.entitades.Venda;
 import com.autobots.automanager.repositorios.RepositorioCredencialUsuarioSenha;
 import com.autobots.automanager.repositorios.RepositorioDocumento;
 import com.autobots.automanager.repositorios.RepositorioEmail;
@@ -34,6 +36,12 @@ public class UsuarioServico {
 	
 	@Autowired
 	private MercadoriaServico servicoMercadoria;
+	
+	@Autowired
+	private VendaServico servicoVenda;
+	
+	@Autowired
+	private VeiculoServico servicoVeiculo;
 	
 	public List<Usuario> pegarTodos() {
 		List<Usuario> pegarTodos = repositorio.findAll();
@@ -137,6 +145,24 @@ public class UsuarioServico {
 		Mercadoria mercadoria = servicoMercadoria.pegarPeloId(idMercadoria); 
 		if(selecionado.getId() == idCliente) {
 			selecionado.getMercadorias().remove(mercadoria);
+		}
+	}
+	public void deletarVendas(Long idCliente, Long idMercadoria) {
+		List<Usuario> todos = pegarTodos();
+		UsuariosSelecionador select = new UsuariosSelecionador();
+		Usuario selecionado = select.selecionar(todos, idCliente);
+		Venda mercadoria = servicoVenda.pegarPeloId(idMercadoria); 
+		if(selecionado.getId() == idCliente) {
+			selecionado.getVendas().remove(mercadoria);
+		}
+	}
+	public void deletarVeiculos(Long idCliente, Long idMercadoria) {
+		List<Usuario> todos = pegarTodos();
+		UsuariosSelecionador select = new UsuariosSelecionador();
+		Usuario selecionado = select.selecionar(todos, idCliente);
+		Veiculo mercadoria = servicoVeiculo.pegarPeloId(idMercadoria); 
+		if(selecionado.getId() == idCliente) {
+			selecionado.getVeiculos().remove(mercadoria);
 		}
 	}
 	

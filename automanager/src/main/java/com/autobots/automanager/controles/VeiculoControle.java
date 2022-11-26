@@ -5,17 +5,23 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.autobots.automanager.componentes.UsuariosSelecionador;
 import com.autobots.automanager.componentes.VeiculoSelecionador;
-import com.autobots.automanager.entitades.Empresa;
+import com.autobots.automanager.entitades.Usuario;
 import com.autobots.automanager.entitades.Veiculo;
+import com.autobots.automanager.entitades.Venda;
+import com.autobots.automanager.servicos.UsuarioServico;
 import com.autobots.automanager.servicos.VeiculoServico;
+import com.autobots.automanager.servicos.VendaServico;
 
 @RestController
 @RequestMapping("/veiculo")
@@ -26,6 +32,15 @@ public class VeiculoControle {
 	
 	@Autowired
 	private VeiculoSelecionador selecionador;
+	
+	@Autowired
+	private UsuariosSelecionador usuarioSelecionador;
+	
+	@Autowired
+	private UsuarioServico servicoUsuario;
+
+	@Autowired
+	private VendaServico servicoVenda;
 	
 	@GetMapping("/veiculos")
 	public ResponseEntity<List<Veiculo>> pegarTodos(){
@@ -42,7 +57,7 @@ public class VeiculoControle {
 	}
 
 	@GetMapping("/veiculos/{id}")
-	public ResponseEntity<Veiculo> pegarUsuarioEspecifico(@PathVariable Long id){
+	public ResponseEntity<Veiculo> pegarVeiculoEspecifico(@PathVariable Long id){
 		List<Veiculo> todasEmpresas = veiculoServico.pegarTodos();
 		Veiculo select = selecionador.selecionar(todasEmpresas, id);
 		if(select == null) {
@@ -52,15 +67,51 @@ public class VeiculoControle {
 		}
 	}
 	
+	@PostMapping("/cadastro/{idUsuario}")
+	public ResponseEntity<?> cadastroVeiculo(@PathVariable Long idUsuario, @RequestBody Veiculo body){
+		List<Usuario> todos = servicoUsuario.pegarTodos();
+		Usuario select = usuarioSelecionador.selecionar(todos, idUsuario);
+		if(select != null) {
+			select.getVeiculos().add(body);
+			body.setProprietario(select);
+			veiculoServico.adicionar(body);
+		}
+		return null;
+	}
+	
 	@PutMapping("/atualizar/{id}")
-	public ResponseEntity<?> atualizarUsuario(@PathVariable Long id, @RequestBody Empresa atualizador){
+	public ResponseEntity<?> atualizarVeiculo(@PathVariable Long id, @RequestBody Veiculo atualizador){
 		HttpStatus status = HttpStatus.BAD_REQUEST;
 		List<Veiculo> usuarios = veiculoServico.pegarTodos();
-		atualizador.setId(id);
 		Veiculo usuario = selecionador.selecionar(usuarios, id);
 		if (usuario != null) {
+			atualizador.setId(id);
+			veiculoServico.update(atualizador);
 			status = HttpStatus.OK;
 		}
 		return new ResponseEntity<>(status);
 	}
+	
+	@DeleteMapping("/deletar/{id}")
+	public ResponseEntity<?> deletarVeiculo(@PathVariable Long id){
+		
+		veiculoServico.deletar(id);
+		List<Usuario> usuarios = servicoUsuario.pegarTodos();
+		List<Venda> vendas = servicoVenda.pegarTodos();
+	    for (Usuario mercadoriaEmpresa : usuarios) {
+	        for (Veiculo empresaMercadoria : mercadoriaEmpresa.getVeiculos()) {
+	          if (empresaMercadoria.getId() == id) {
+	            servicoUsuario.deletarVeiculos(mercadoriaEmpresa.getId(), id);
+	          }
+	        }
+	      }
+	    for (Venda mercadoriaEmpresa : vendas) {
+	    		if (mercadoriaEmpresa.getId() == id) {
+	    			mercadoriaEmpresa.setVeiculo(null);
+	    		}
+	    }
+	    veiculoServico.deletar(id);
+		return null;
+	}
+
 }
