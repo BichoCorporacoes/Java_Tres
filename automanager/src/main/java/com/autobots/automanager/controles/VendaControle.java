@@ -1,18 +1,7 @@
 package com.autobots.automanager.controles;
 
-import com.autobots.automanager.componentes.EmpresaSelecionadora;
-import com.autobots.automanager.componentes.VendaSelecionador;
-import com.autobots.automanager.entitades.Empresa;
-import com.autobots.automanager.entitades.Mercadoria;
-import com.autobots.automanager.entitades.Servico;
-import com.autobots.automanager.entitades.Usuario;
-import com.autobots.automanager.entitades.Veiculo;
-import com.autobots.automanager.entitades.Venda;
-import com.autobots.automanager.servicos.EmpresaServico;
-import com.autobots.automanager.servicos.UsuarioServico;
-import com.autobots.automanager.servicos.VeiculoServico;
-import com.autobots.automanager.servicos.VendaServico;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +13,20 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.autobots.automanager.componentes.EmpresaSelecionadora;
+import com.autobots.automanager.componentes.VendaSelecionador;
+import com.autobots.automanager.entitades.Empresa;
+import com.autobots.automanager.entitades.Mercadoria;
+import com.autobots.automanager.entitades.Servico;
+import com.autobots.automanager.entitades.Usuario;
+import com.autobots.automanager.entitades.Veiculo;
+import com.autobots.automanager.entitades.Venda;
+import com.autobots.automanager.hateos.VendaHateos;
+import com.autobots.automanager.servicos.EmpresaServico;
+import com.autobots.automanager.servicos.UsuarioServico;
+import com.autobots.automanager.servicos.VeiculoServico;
+import com.autobots.automanager.servicos.VendaServico;
 
 @RestController
 @RequestMapping("/venda")
@@ -46,6 +49,9 @@ public class VendaControle {
 
   @Autowired
   private EmpresaSelecionadora selecionadorEmpresa;
+  
+  @Autowired
+  private VendaHateos hateos;
 
   @GetMapping("/vendas")
   public ResponseEntity<List<Venda>> pegarTodos() {
@@ -56,6 +62,7 @@ public class VendaControle {
       return new ResponseEntity<List<Venda>>(status);
     } else {
       status = HttpStatus.FOUND;
+      hateos.adicionarLink(todos);
       ResponseEntity<List<Venda>> resposta = new ResponseEntity<List<Venda>>(
         todos,
         status
@@ -71,6 +78,7 @@ public class VendaControle {
     if (select == null) {
       return new ResponseEntity<Venda>(HttpStatus.NOT_FOUND);
     } else {
+    	hateos.adicionarLink(select);
       return new ResponseEntity<Venda>(select, HttpStatus.FOUND);
     }
   }

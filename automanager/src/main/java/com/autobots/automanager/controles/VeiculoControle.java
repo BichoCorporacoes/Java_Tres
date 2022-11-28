@@ -20,6 +20,7 @@ import com.autobots.automanager.componentes.VeiculoSelecionador;
 import com.autobots.automanager.entitades.Usuario;
 import com.autobots.automanager.entitades.Veiculo;
 import com.autobots.automanager.entitades.Venda;
+import com.autobots.automanager.hateos.VeiculoHateos;
 import com.autobots.automanager.servicos.UsuarioServico;
 import com.autobots.automanager.servicos.VeiculoServico;
 import com.autobots.automanager.servicos.VendaServico;
@@ -43,6 +44,9 @@ public class VeiculoControle {
 	@Autowired
 	private VendaServico servicoVenda;
 	
+	@Autowired
+	private VeiculoHateos hateos;
+	
 	@GetMapping("/veiculos")
 	public ResponseEntity<List<Veiculo>> pegarTodos(){
 		List<Veiculo> todos = veiculoServico.pegarTodos();
@@ -51,6 +55,7 @@ public class VeiculoControle {
 			status = HttpStatus.NOT_FOUND;
 			return new ResponseEntity<List<Veiculo>>(status);
 		}else {
+			hateos.adicionarLink(todos);
 			status = HttpStatus.FOUND;
 			ResponseEntity<List<Veiculo>> resposta = new ResponseEntity<List<Veiculo>>(todos, status);
 			return resposta;
@@ -64,6 +69,7 @@ public class VeiculoControle {
 		if(select == null) {
 			return new ResponseEntity<Veiculo>(HttpStatus.NOT_FOUND);
 		}else {
+			hateos.adicionarLink(select);
 			return new ResponseEntity<Veiculo>(select, HttpStatus.FOUND);
 		}
 	}

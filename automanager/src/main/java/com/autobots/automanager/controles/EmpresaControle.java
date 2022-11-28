@@ -67,8 +67,14 @@ public class EmpresaControle {
   }
 
   @DeleteMapping("/deletar/{idEmpresa}")
-  public void deletarEmpresa(@PathVariable Long idEmpresa) {
-    empresaServico.deletar(idEmpresa);
+  public ResponseEntity<?> deletarEmpresa(@PathVariable Long idEmpresa) {
+	  List<Empresa> empresas = empresaServico.pegarTodas();
+	  Empresa empresa = selecionador.selecionar(empresas, idEmpresa);
+	  if(empresa != null) {
+		  empresaServico.deletar(idEmpresa);
+		  return new ResponseEntity<>("Deletado com suecsso", HttpStatus.ACCEPTED);
+	  }
+	  return new ResponseEntity<>("Não encontrada", HttpStatus.NOT_FOUND);
   }
 
   @PutMapping("/atualizar/{id}")
